@@ -3,41 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قیمت زنده DOGS/USDT</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        #price {
-            font-size: 2em;
-            color: #333;
-        }
-    </style>
+    <title>قیمت لحظه‌ای توکن داگز</title>
 </head>
 <body>
-    <h1>قیمت زنده DOGS/USDT</h1>
+    <h1>قیمت لحظه‌ای توکن داگز (DOGS)</h1>
     <div id="price">در حال بارگذاری...</div>
 
     <script>
         async function fetchPrice() {
             try {
-                const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://m.lbank.com/market/meme/dogs_usdt'));
+                const response = await fetch('https://api.bingx.com/v1/market/ticker?symbol=DOGS_USDT');
                 const data = await response.json();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data.contents, 'text/html');
-                const priceElement = doc.querySelector('.price'); // اینجا باید کلاس یا شناسه عنصر قیمت را پیدا کنید
-                const price = priceElement ? priceElement.textContent : 'نامشخص';
-                document.getElementById('price').innerText = `قیمت: ${price} USDT`;
+                document.getElementById('price').innerText = `قیمت: ${data.price} دلار`;
             } catch (error) {
-                console.error('Error fetching price:', error);
                 document.getElementById('price').innerText = 'خطا در دریافت قیمت';
             }
         }
 
         fetchPrice();
-        setInterval(fetchPrice, 10000); // بروزرسانی هر 10 ثانیه
+        setInterval(fetchPrice, 60000); // به‌روزرسانی هر 60 ثانیه
     </script>
 </body>
 </html>
