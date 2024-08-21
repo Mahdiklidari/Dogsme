@@ -14,7 +14,12 @@
             try {
                 const response = await fetch('https://api.bingx.com/v1/market/ticker?symbol=DOGS_USDT');
                 const data = await response.json();
-                document.getElementById('price').innerText = `قیمت: ${data.price} دلار`;
+                // بررسی ساختار داده‌های بازگشتی
+                if (data && data.data && data.data[0] && data.data[0].last) {
+                    document.getElementById('price').innerText = `قیمت: ${data.data[0].last} دلار`;
+                } else {
+                    document.getElementById('price').innerText = 'قیمت: نامشخص';
+                }
             } catch (error) {
                 document.getElementById('price').innerText = 'خطا در دریافت قیمت';
             }
