@@ -12,11 +12,11 @@
     <script>
         async function fetchPrice() {
             try {
-                const response = await fetch('https://api.bingx.com/v1/market/ticker?symbol=DOGS_USDT');
+                const response = await fetch('https://api.lbank.info/v2/ticker.do?symbol=dogs_usdt');
                 const data = await response.json();
                 // بررسی ساختار داده‌های بازگشتی
-                if (data && data.data && data.data[0] && data.data[0].last) {
-                    document.getElementById('price').innerText = `قیمت: ${data.data[0].last} دلار`;
+                if (data && data.ticker && data.ticker.latest) {
+                    document.getElementById('price').innerText = `قیمت: ${data.ticker.latest} دلار`;
                 } else {
                     document.getElementById('price').innerText = 'قیمت: نامشخص';
                 }
