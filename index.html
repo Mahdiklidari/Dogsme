@@ -23,10 +23,12 @@
     <script>
         async function fetchPrice() {
             try {
-                const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://api.lbank.info/v2/ticker.do?symbol=dogs_usdt'));
+                const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://m.lbank.com/market/meme/dogs_usdt'));
                 const data = await response.json();
-                const parsedData = JSON.parse(data.contents);
-                const price = parsedData.ticker.latest;
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
+                const priceElement = doc.querySelector('.price'); // اینجا باید کلاس یا شناسه عنصر قیمت را پیدا کنید
+                const price = priceElement ? priceElement.textContent : 'نامشخص';
                 document.getElementById('price').innerText = `قیمت: ${price} USDT`;
             } catch (error) {
                 console.error('Error fetching price:', error);
