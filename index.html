@@ -58,12 +58,12 @@
             currentPrice = newPrice;
         }
 
-        // تابع برای به‌روزرسانی قیمت ارز از بایننس
+        // تابع برای به‌روزرسانی قیمت ارز از CoinGecko
         async function fetchPrice() {
             try {
-                const response = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=DOGEUSDT');
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=dogecoin&vs_currencies=usd');
                 const data = await response.json();
-                const newPrice = parseFloat(data.price);
+                const newPrice = parseFloat(data.dogecoin.usd);
                 updatePrice(newPrice);
             } catch (error) {
                 console.error('Error fetching price:', error);
