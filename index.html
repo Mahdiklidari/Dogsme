@@ -21,7 +21,7 @@
         </div>
         <div>
             <label for="tokens">تعداد توکن:</label>
-            <input type="text" id="tokens" oninput="formatNumber(this)">
+            <input type="text" id="tokens">
         </div>
         <button onclick="calculate()">محاسبه</button>
         <div class="result">
@@ -34,15 +34,9 @@
         const exchangeRate = 58000; // نرخ تبدیل دلار به تومان
         let currentPrice = 0.00; // قیمت فعلی ارز داگز
 
-        // تابع برای فرمت کردن اعداد
-        function formatNumber(input) {
-            let value = input.value.replace(/,/g, '');
-            input.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
-
         // تابع برای محاسبه قیمت‌ها
         function calculate() {
-            let tokens = document.getElementById('tokens').value.replace(/\./g, '');
+            let tokens = document.getElementById('tokens').value.replace(/,/g, '');
             let totalDollar = tokens * currentPrice;
             let totalToman = totalDollar * exchangeRate;
 
@@ -53,8 +47,8 @@
         // تابع برای به‌روزرسانی قیمت ارز
         function updatePrice(newPrice) {
             let priceElement = document.getElementById('price');
-            priceElement.innerText = newPrice.toFixed(2);
             priceElement.className = newPrice >= currentPrice ? 'green' : 'red';
+            priceElement.innerText = newPrice.toFixed(4);
             currentPrice = newPrice;
         }
 
