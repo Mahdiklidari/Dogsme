@@ -3,69 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ماشین حساب ارز داگز</title>
+    <title>TapSwap</title>
     <style>
-        body { font-family: Arial, sans-serif; direction: rtl; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .result { margin-top: 20px; }
-        .green { color: green; }
-        .red { color: red; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1d1c25;
+            color: white;
+        }
+
+        .container {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon {
+            background-color: #444;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .stats, .actions {
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .stat-item, .action-item {
+            background-color: #333;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-item .label, .action-item .label {
+            display: block;
+            font-size: 18px;
+        }
+
+        .stat-item .sub-label {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .coin {
+            margin: 30px 0;
+            background-color: #272533;
+            padding: 20px;
+            border-radius: 50%;
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .coin-inner {
+            animation: rotate 5s linear infinite;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .coin-inner span {
+            font-size: 20px;
+            color: #fff;
+            text-shadow: 0 0 5px #ff00ff;
+        }
+
+        .energy {
+            font-size: 20px;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .menu-item {
+            background-color: #444;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>ماشین حساب ارز داگز</h1>
-        <div>
-            <label for="price">قیمت ارز (دلار):</label>
-            <span id="price" class="green">0.00</span>
+        <div class="header">
+            <span class="title">TapSwap</span>
+            <span class="status-icons">
+                <span class="icon">4G</span>
+                <span class="icon">VPN</span>
+                <span class="icon">Signal</span>
+            </span>
         </div>
-        <div>
-            <label for="tokens">تعداد توکن:</label>
-            <input type="text" id="tokens">
+        <div class="stats">
+            <div class="stat-item">
+                <span class="label" id="gold-coins">134.61M</span>
+            </div>
+            <div class="stat-item">
+                <span class="label" id="blue-crystals">7.22M</span>
+                <span class="sub-label">37400/h</span>
+            </div>
+            <div class="stat-item">
+                <span class="label" id="green-gems">234</span>
+            </div>
+            <div class="stat-item">
+                <span class="label" id="energy-points">100</span>
+            </div>
         </div>
-        <button onclick="calculate()">محاسبه</button>
-        <div class="result">
-            <p>قیمت به دلار: <span id="totalDollar">0.00</span></p>
-            <p>قیمت به تومان: <span id="totalToman">0.00</span></p>
+        <div class="actions">
+            <div class="action-item">
+                <span class="label">Legendary</span>
+            </div>
+            <div class="action-item">
+                <span class="label" onclick="connectWallet()">Connect Wallet</span>
+            </div>
+        </div>
+        <div class="coin">
+            <div class="coin-inner">
+                <span>+30</span>
+                <span>+30</span>
+                <span>+30</span>
+                <span>+30</span>
+                <span>+30</span>
+                <span>+30</span>
+            </div>
+        </div>
+        <div class="energy" id="energy-count">
+            5107/5500
+        </div>
+        <div class="menu">
+            <button class="menu-item" onclick="earnCoins()">Earn</button>
+            <button class="menu-item" onclick="showTasks()">Tasks</button>
+            <button class="menu-item" onclick="goToTown()">Town</button>
+            <button class="menu-item" onclick="swapItems()">Swap</button>
+            <button class="menu-item" onclick="openAccount()">Account</button>
         </div>
     </div>
 
     <script>
-        const exchangeRate = 58000; // نرخ تبدیل دلار به تومان
-        let currentPrice = 0.00; // قیمت فعلی ارز داگز
-
-        // تابع برای محاسبه قیمت‌ها
-        function calculate() {
-            let tokens = document.getElementById('tokens').value.replace(/,/g, '');
-            let totalDollar = tokens * currentPrice;
-            let totalToman = totalDollar * exchangeRate;
-
-            document.getElementById('totalDollar').innerText = totalDollar.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('totalToman').innerText = totalToman.toLocaleString('fa-IR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/,/g, '/');
+        function connectWallet() {
+            alert("Connecting to your wallet...");
+            // کد لازم برای اتصال به کیف پول دیجیتال اینجا قرار گیرد
         }
 
-        // تابع برای به‌روزرسانی قیمت ارز
-        function updatePrice(newPrice) {
-            let priceElement = document.getElementById('price');
-            priceElement.className = newPrice >= currentPrice ? 'green' : 'red';
-            priceElement.innerText = newPrice.toFixed(4);
-            currentPrice = newPrice;
+        function earnCoins() {
+            alert("You have earned some coins!");
+            // افزایش سکه‌های طلایی
+            const goldCoins = document.getElementById('gold-coins');
+            goldCoins.textContent = parseFloat(goldCoins.textContent) + 10 + 'M';
         }
 
-        // تابع برای به‌روزرسانی قیمت ارز از CoinGecko
-        async function fetchPrice() {
-            try {
-                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=dogecoin&vs_currencies=usd');
-                const data = await response.json();
-                const newPrice = parseFloat(data.dogecoin.usd);
-                updatePrice(newPrice);
-            } catch (error) {
-                console.error('Error fetching price:', error);
-            }
+        function showTasks() {
+            alert("Showing tasks...");
+            // نمایش لیست وظایف
         }
 
-        // به‌روزرسانی قیمت هر 5 ثانیه
-        setInterval(fetchPrice, 5000);
+        function goToTown() {
+            alert("Going to town...");
+            // انتقال به صفحه شهر
+        }
+
+        function swapItems() {
+            alert("Swapping items...");
+            // عملکرد تعویض آیتم‌ها
+        }
+
+        function openAccount() {
+            alert("Opening account settings...");
+            // باز کردن تنظیمات حساب کاربری
+        }
     </script>
 </body>
 </html>
